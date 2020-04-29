@@ -1,12 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/register">Register</router-link> |
-      <router-link to="/logout">Logout</router-link>
-    </div>
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+             <router-link to="/">Home</router-link>
+        </li>
+        <li class="nav-item">
+            <router-link to="/about">About</router-link>
+        </li>
+        <li class="nav-item" v-if="!loggedIn">
+           <router-link :to="{ name: 'Login' }">Login</router-link>
+        </li>
+         <li class="nav-item" v-if="!loggedIn">
+           <router-link to="/register">Register</router-link>
+        </li>
+         <li class="nav-item" v-if="loggedIn">
+           <router-link to="/logout">Logout</router-link>
+        </li>
+    </ul>
     <router-view/>
   </div>
 </template>
@@ -33,3 +43,13 @@
   color: #42b983;
 }
 </style>
+
+<script>
+export default {
+  computed: {
+    loggedIn() {
+      return this.$store.getters.loginedIn
+    }
+  }
+}
+</script>
