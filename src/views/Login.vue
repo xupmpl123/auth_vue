@@ -13,7 +13,7 @@
             class="form-control" name="password" id="password" v-model="password">
         </div>
         <div class="form-group">
-          <button class="btn" @click="login">Login</button>
+          <button class="btn" @click.prevent="login">Login</button>
         </div>
     </form>
   </div>
@@ -35,8 +35,8 @@ export default {
                 password: this.password,
             })
             .then(response => {
-              console.log(response)
               this.$router.push({ name: 'Home'})
+              return response
             })
             .catch(error => {
               console.log(error)

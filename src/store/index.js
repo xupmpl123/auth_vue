@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import axios from 'axios'
+import axios from 'axios'
 
 Vue.use(Vuex)
+
+// Make Axios play CSRF
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 export default new Vuex.Store({
   state: {
@@ -32,31 +36,25 @@ export default new Vuex.Store({
       }
     },
     retrieveToken(context, credentials) {
-      return new Promise((resolve)=> {
-        const token = "我是拓肯" + credentials.username + credentials.password
-        localStorage.setItem('access_token', token)
-        context.commit('retrieveToken', token)
-        resolve("sccuess")
-      })
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8000/api-token-auth/', {
+          username: credentials.username,
+          password: credentials.password,
+        })
+        .then(res => {
+          const token = res.data.token
+          console.log(res)
+
+          localStorage.setItem('access_token', token)
+          context.commit('retrieveToken', token)
+          resolve(res)
+        })
+        .catch(err => {
+          console.log(err)
+          reject(err)
+        })
+})
     }
   },
   modules: {}
 })
-
-// return new Promise((resolve, reject) => {
-//   axios.post('/login', {
-//       username: credentials.username,
-//       password: credentials.password,
-//     })
-//     .then(res => {
-//       const token = res.data.access_token
-
-//       localStorage.setItem('access_token', token)
-//       context.commit('retrieveToken', token)
-//       resolve(res)
-//     })
-//     .catch(err => {
-//       console.log(err)
-//       reject(err)
-//     })
-// })
