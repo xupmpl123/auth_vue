@@ -17,20 +17,41 @@ Vue.use(VueRouter)
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: About
+    component: About,
+    beforeEnter: (to, from, next) => {
+      let currentUser = window.localStorage.getItem('access_token')
+      if(currentUser) {
+        next()
+      } else {
+        next({ path: '/login'})
+      }
+    }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      let currentUser = window.localStorage.getItem('access_token')
+      if(currentUser) {
+        next({ path: '/' })
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    beforeEnter: (to, from, next) => {
+      let currentUser = window.localStorage.getItem('access_token')
+      if(currentUser) {
+        next({ path: '/' })
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/logout',

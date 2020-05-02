@@ -3,9 +3,9 @@
     <h1>登入 Login</h1>
     <form action="#" @submit.prevent="login">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="username">email</label>
           <input type="text"
-            class="form-control" name="username" id="username" v-model="username">
+            class="form-control" name="email" id="email" v-model="email">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -24,14 +24,14 @@ export default {
     name: 'login',
     data() {
         return {
-            username: '',
+            email: '',
             password: '',
         }
     },
     methods: {
         login() {
             this.$store.dispatch('retrieveToken', {
-                username: this.username,
+                email: this.email,
                 password: this.password,
             })
             .then(response => {

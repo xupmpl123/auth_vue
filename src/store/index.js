@@ -12,7 +12,7 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem('access_token') || null,
   },
-  getters:{
+  getters: {
     loginedIn(state) {
       return state.token !== null
     }
@@ -27,8 +27,8 @@ export default new Vuex.Store({
   },
   actions: {
     destroyToken(context) {
-      if(context.getters.loginedIn) {
-        return new Promise((resolve)=> {
+      if (context.getters.loginedIn) {
+        return new Promise((resolve) => {
           localStorage.removeItem('access_token')
           context.commit('destroyToken')
           resolve("sccuess")
@@ -38,22 +38,40 @@ export default new Vuex.Store({
     retrieveToken(context, credentials) {
       return new Promise((resolve, reject) => {
         axios.post('http://localhost:8000/api-token-auth/', {
-          username: credentials.username,
-          password: credentials.password,
-        })
-        .then(res => {
-          const token = res.data.token
-          console.log(res)
+            email: credentials.email,
+            password: credentials.password,
+          })
+          .then(res => {
+            const token = res.data.token
 
-          localStorage.setItem('access_token', token)
-          context.commit('retrieveToken', token)
-          resolve(res)
-        })
-        .catch(err => {
-          console.log(err)
-          reject(err)
-        })
-})
+            localStorage.setItem('access_token', token)
+            context.commit('retrieveToken', token)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    registerUser(context, credentials) {
+      return new Promise((resolve, reject) => {
+        axios.post('http://localhost:8000/api/register/', {
+            username: credentials.username,
+            email: credentials.email,
+            password1: credentials.password1,
+            password2: credentials.password2,
+          })
+          .then(res => {
+            const token = res.data.token
+
+            localStorage.setItem('access_token', token)
+            context.commit('retrieveToken', token)
+            resolve(res)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      }) 
     }
   },
   modules: {}
